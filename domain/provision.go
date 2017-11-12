@@ -1,4 +1,4 @@
-package main
+package domain
 
 import (
 	"bytes"
@@ -32,8 +32,8 @@ type provisionResponse struct {
 func postProvisionMessage(url *url.URL, username Username, provisionCode ProvisionCode) *provisionResponse {
 	b := new(bytes.Buffer)
 	xml.NewEncoder(b).Encode(provisionMessagePostPayload{
-		Version:       "3.1",
-		Action:        "ping",
+		Version:       "3.6",
+		Action:        "provision",
 		Username:      username,
 		ProvisionCode: provisionCode,
 	})

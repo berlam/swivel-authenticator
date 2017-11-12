@@ -1,4 +1,4 @@
-package main
+package domain
 
 import (
 	"bytes"
@@ -53,7 +53,7 @@ func getServerDetails(serverId ServerId) *ServerDetailsResponse {
 func postManualSettingsVerification(url *url.URL) *verificationResponse {
 	b := new(bytes.Buffer)
 	xml.NewEncoder(b).Encode(manualSettingsVerificationPostPayload{
-		Version: "3.1",
+		Version: "3.6",
 		Action:  "ping",
 	})
 	resp, _ := http.Post(url.String()+SUFFIX_AGENT, APPLICATION_TYPE_XML, b)

@@ -1,4 +1,4 @@
-package main
+package domain
 
 import (
 	"bytes"
@@ -49,7 +49,7 @@ func getNextSecurityKeyIndex(url *url.URL, username Username) int {
 func postUpdateKeys(url *url.URL, provisionId ProvisionId) []string {
 	b := new(bytes.Buffer)
 	xml.NewEncoder(b).Encode(updateKeysMessagePostPayload{
-		Version: "3.1",
+		Version: "3.6",
 		Action:  "SecurityStrings",
 		Id:      provisionId,
 	})

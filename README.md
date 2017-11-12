@@ -6,7 +6,7 @@ Feel free to extend it for yours.
 
 I am using it to connect to a VPN, which asks for the OTC. The call looks like this and connects instantly to the VPN.
 ```Shell
-swivel-authenticator otc $SWIVEL_PROVISION_ID $SWIVEL_USER_PIN | vpnc $VPNC_CONFIG_LOCATION
+swivelt $SWIVEL_PROVISION_ID $SWIVEL_USER_PIN | vpnc $VPNC_CONFIG_LOCATION
 ```
 
 Settings and keys are stored in:
@@ -15,18 +15,16 @@ Settings and keys are stored in:
 ## Arguments ##
 * Provision
 ```Shell
-swivel-authenticator provision $SWIVEL_SERVER_ID $SWIVEL_USERNAME $SWIVEL_PROVISION_CODE
+swivelp $SWIVEL_SERVER_ID $SWIVEL_USERNAME $SWIVEL_PROVISION_CODE
 ```
 * OTC
 ```Shell
-swivel-authenticator otc $SWIVEL_PROVISION_ID $SWIVEL_USER_PIN 
+swivelt $SWIVEL_SERVER_ID $SWIVEL_USER_PIN 
 ```
 
 ## Build from source ##
 1. install `go`
-2. run `go build $GIT_ROOT/src/github.com/berlam/swivel-authenticator`
-3. executable at `$GIT_ROOT/swivel-authenticator`
-4. you can install it with `go install`
+2. run `go {build,install} $GIT_ROOT/src/github.com/berlam/swivel-authenticator/{domain,cmd/swivelp,cmd/swivelt}`
 
 ## Authentication API ##
 Here are the Swivel APIs used for the authentication.
@@ -39,8 +37,8 @@ Here are the Swivel APIs used for the authentication.
 ```xml
 <?xml version='1.0' ?>
 <SASRequest>
-	<Version>3.1</Version>
-	<Action>Provision</Action>
+	<Version>3.6</Version>
+	<Action>provision</Action>
 	<Username>$SWIVEL_USERNAME</Username>
 	<ProvisionCode>$SWIVEL_PROVISION_CODE</ProvisionCode>
 </SASRequest>
@@ -51,7 +49,7 @@ Here are the Swivel APIs used for the authentication.
 ```xml
 <?xml version='1.0' ?>
 <SASRequest>
-	<Version>3.1</Version>
+	<Version>3.6</Version>
 	<Action>SecurityStrings</Action>
 	<Id>$SWIVEL_PROVISION_ID</Id>
 </SASRequest>
@@ -74,7 +72,7 @@ Note: The keys will be updated, when the index reaches zero. You will get 100 ne
 
 ## Credits ##
 
-This project was created by [Matthias Berla](https://github.com/berlam).
+This project was created by [@berlam](https://github.com/berlam).
 
 ## License ##
 
