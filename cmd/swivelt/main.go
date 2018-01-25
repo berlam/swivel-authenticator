@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/berlam/swivel-authenticator/domain"
+	"github.com/berlam/swivel-authenticator/pkg"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	serverId := domain.ServerId(args[0])
-	pin := domain.Pin(args[1])
-	fmt.Println(domain.Token(serverId, pin))
+	serverId := pkg.ServerId(args[0])
+	pin := pkg.Pin(args[1])
+	fmt.Println(pkg.Token(serverId, pin))
 }
