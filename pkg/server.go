@@ -1,11 +1,10 @@
 package pkg
 
 import (
-	"bytes"
 	"encoding/xml"
-	"log"
 	"net/http"
 	"net/url"
+	"bytes"
 )
 
 type ServerId string
@@ -38,16 +37,17 @@ type manualSettingsVerificationPostPayload struct {
 	Action  string   `xml:"Action"`
 }
 
-func getServerDetails(serverId ServerId) *ServerDetailsResponse {
-	resp, _ := http.Get("https://ssd.swivelsecure.net/ssdserver/getServerDetails?id=" + string(serverId))
-	defer resp.Body.Close()
-
-	var result ServerDetailsResponse
-	err := xml.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		log.Print(err)
+func getServerDetails(serverId ServerId) (*ServerDetailsResponse, error) {
+	resp, err := http.Get("https://ssd.swivelsecure.net/ssdserver/getServerDetails?id=" + string(serverId))
+	if err == nil {
+		defer resp.Body.Close()
+		var result ServerDetailsResponse
+		err = xml.NewDecoder(resp.Body).Decode(&result)
+		if err == nil {
+			return &result, nil
+		}
 	}
-	return &result
+	return nil, err
 }
 
 func postManualSettingsVerification(url *url.URL) *verificationResponse {
@@ -76,6 +76,10 @@ func buildServerUrl(serverDetails *ServerDetailsResponse) *url.URL {
 	}
 }
 
-func GetServerUrl(serverId ServerId) *url.URL {
-	return buildServerUrl(getServerDetails(serverId))
+func GetServerUrl(serverId ServerId) (*url.URL, error) {
+	serverDetails, err := getServerDetails(serverId)
+	if err == nil {
+		return buildServerUrl(serverDetails), nil
+	}
+	return nil, err
 }

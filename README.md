@@ -22,6 +22,8 @@ $ swivelp $SWIVEL_SERVER_ID $SWIVEL_USERNAME $SWIVEL_PROVISION_CODE
 $ swivelt $SWIVEL_SERVER_ID $SWIVEL_USER_PIN 
 ```
 
+You can disable certificate validation with '--no-verify' as last argument.
+
 ## Build from source ##
 If you want to build Swivel Authenticator right away you need to have a working [Go environment](https://golang.org/doc/install).
 ```Shell

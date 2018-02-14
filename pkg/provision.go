@@ -29,7 +29,7 @@ type provisionResponse struct {
 	Id        ProvisionId `xml:"Id"`
 }
 
-func postProvisionMessage(url *url.URL, username Username, provisionCode ProvisionCode) *provisionResponse {
+func postProvisionMessage(url *url.URL, username Username, provisionCode ProvisionCode) (*provisionResponse, error) {
 	b := new(bytes.Buffer)
 	xml.NewEncoder(b).Encode(provisionMessagePostPayload{
 		Version:       "3.6",
@@ -37,27 +37,37 @@ func postProvisionMessage(url *url.URL, username Username, provisionCode Provisi
 		Username:      username,
 		ProvisionCode: provisionCode,
 	})
-	resp, _ := http.Post(url.String()+SUFFIX_AGENT, APPLICATION_TYPE_XML, b)
-	defer resp.Body.Close()
-
-	var result provisionResponse
-	xml.NewDecoder(resp.Body).Decode(&result)
-	return &result
+	resp, err := http.Post(url.String()+SUFFIX_AGENT, APPLICATION_TYPE_XML, b)
+	if err == nil {
+		defer resp.Body.Close()
+		var result provisionResponse
+		xml.NewDecoder(resp.Body).Decode(&result)
+		return &result, nil
+	}
+	return nil, err
 }
 
-func Provision(serverId ServerId, username Username, code ProvisionCode) {
+func Provision(serverId ServerId, username Username, code ProvisionCode) error {
 	// Get the server url from Swivel
-	serverUrl := GetServerUrl(serverId)
+	serverUrl, err := GetServerUrl(serverId)
 
-	// Start provisioning
-	provisionMessage := postProvisionMessage(serverUrl, username, code)
+	if err == nil {
+		// Start provisioning
+		provisionMessage, err := postProvisionMessage(serverUrl, username, code)
 
-	// Save provision
-	SaveUserConfig(UserHomeDir(), serverId, &UserConfig{
-		ProvisionCodeParam: code,
-		SecurityStrings:    []SecurityString{},
-		LastIndexUsed:      0,
-		IndexSecString:     0,
-		ProvisionId:        provisionMessage.Id,
-	})
+		if err == nil {
+			// Save provision
+			SaveUserConfig(UserHomeDir(), serverId, &UserConfig{
+				ProvisionCodeParam: code,
+				SecurityStrings:    []SecurityString{},
+				LastIndexUsed:      0,
+				IndexSecString:     0,
+				ProvisionId:        provisionMessage.Id,
+			})
+
+			return nil
+		}
+	}
+
+	return err
 }

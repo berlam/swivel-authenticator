@@ -73,12 +73,15 @@ func calculateOTC(secString SecurityString, pin Pin) string {
 	return otc
 }
 
-func Token(serverId ServerId, pin Pin) string {
+func Token(serverId ServerId, pin Pin) (string, error) {
 	// Get user config from home directory
 	userConfig := GetUserConfig(UserHomeDir(), serverId)
 
 	// Get the server url from Swivel
-	serverUrl := GetServerUrl(serverId)
+	serverUrl, err := GetServerUrl(serverId)
+	if err != nil {
+		return "", err
+	}
 
 	// Check for remaining unused local keys
 	total := len(userConfig.SecurityStrings) - 1
@@ -110,5 +113,5 @@ func Token(serverId ServerId, pin Pin) string {
 	securityKey := userConfig.SecurityStrings[index]
 
 	// Calculate the otc
-	return calculateOTC(securityKey, pin) + fmt.Sprintf("%02d", index)
+	return calculateOTC(securityKey, pin) + fmt.Sprintf("%02d", index), nil
 }
