@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/berlam/swivel-authenticator/pkg"
+	"crypto/tls"
 	"log"
 	"net/http"
-	"crypto/tls"
+	"swivel-authenticator/pkg"
 )
 
 func main() {

@@ -1,10 +1,10 @@
 package pkg
 
 import (
+	"bytes"
 	"encoding/xml"
 	"net/http"
 	"net/url"
-	"bytes"
 )
 
 type ServerId string

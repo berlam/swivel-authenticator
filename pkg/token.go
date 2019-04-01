@@ -3,12 +3,12 @@ package pkg
 import (
 	"bytes"
 	"encoding/xml"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 	"strconv"
-	"fmt"
+	"strings"
 )
 
 type Pin string
